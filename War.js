@@ -10,7 +10,8 @@ export class War {
 
 	/**
 	 * Creates a new instance of this class.
-	 * Creates a deck, shuffles it, deals cards to 2 players
+	 * Creates a deck of cards and shuffles it.
+	 * Creates two players and gives them 26 dealt cards each
 	 */
 	constructor() {
 		const deck = new Deck()
@@ -18,13 +19,22 @@ export class War {
 		const cards = deck.deal()
 		const firstDeck = cards.deckOne
 		const secondDeck = cards.deckTwo
-		this.playerOne = new Player('Cody', firstDeck)
-		this.playerTwo = new Player('Smitherson', secondDeck)
+		const playerOneName = prompt('Player one name:')
+		const playerTwoName = prompt('Player two name:')
+		this.playerOne = new Player(playerOneName, firstDeck)
+		this.playerTwo = new Player(playerTwoName, secondDeck)
 		this.#roundCount = 0
 		this.#drawCount = 0
 		this.#pot = []
 	}
 
+	/**
+	 * Cycles through players' decks top to bottom until someone runs out of cards.
+	 * If a player pulls a card that has higher value than the other,
+	 * the opponent's card is added to their deck
+	 * If both cards are the same, those cards and their next cards are added to the pot
+	 * until someone wins, where all cards in the pot go to the winner's deck.
+	 */
 	play() {
 		let shouldAddFaceDownCard = false
 		while (this.playerOne.deck.length && this.playerTwo.deck.length) {
@@ -54,16 +64,24 @@ export class War {
 		this.#winner()
 	}
 
+	/**
+	 * Displays the players of this instance
+	 */
 	viewPlayers() {
 		console.log(`Player one: ${this.playerOne.name}`)
 		console.log(`Player two: ${this.playerTwo.name}`)
 	}
 
+	/**
+	 * Adds both players' cards to the pot (facedown after draw)
+	 * @param {Card} playerOneCard Player one's card
+	 * @param {Card} playerTwoCard Player two's card
+	 */
 	#addCardsToPot(playerOneCard, playerTwoCard) {
 		this.#pot.push(playerOneCard)
 		this.#pot.push(playerTwoCard)
-		this.playerOne.isDraw()
-		this.playerTwo.isDraw()
+		this.playerOne.removeCard()
+		this.playerTwo.removeCard()
 	}
 
 	/**
@@ -80,17 +98,38 @@ export class War {
 		}
 		player.win(oppCard)
 		player === this.playerOne
-			? this.playerTwo.lose()
-			: this.playerOne.lose()
+			? this.playerTwo.removeCard()
+			: this.playerOne.removeCard()
 	}
 
+	/**
+	 * Prints the winner and statistics to the console
+	 * Alerts the winner
+	 */
 	#winner() {
+		console.log(
+			`Player 1: ${this.playerOne.name} - ${this.playerOne.points} points`
+		)
+		console.log(
+			`Player 2: ${this.playerTwo.name} - ${this.playerTwo.points} points`
+		)
 		if (this.playerOne.deck.length === 0) {
 			console.log(`${this.playerTwo.name} wins!`)
+			alert(
+				`${this.playerTwo.name} wins! \nPlayer 1: ${this.playerOne.name} - ${this.playerOne.points} points\nPlayer 2: ${this.playerTwo.name} - ${this.playerTwo.points} points`
+			)
 		} else {
 			console.log(`${this.playerOne.name} wins!`)
+			alert(
+				`${this.playerOne.name} wins! \nPlayer 1: ${this.playerOne.name} - ${this.playerOne.points} points\nPlayer 2: ${this.playerTwo.name} - ${this.playerTwo.points} points`
+			)
 		}
 		console.log(
+			`This match only took ${this.#roundCount} rounds with ${
+				this.#drawCount
+			} Wars!`
+		)
+		alert(
 			`This match only took ${this.#roundCount} rounds with ${
 				this.#drawCount
 			} draws!`

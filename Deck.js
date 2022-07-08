@@ -1,7 +1,12 @@
 import { Card } from './Card.js'
 import { cards, suits } from './cards.js'
+// const Card = require('./Card.js')
 
 export class Deck {
+	/**
+	 * Creates an instance of this class
+	 * Creates an array of 52 cards
+	 */
 	constructor() {
 		this.cards = []
 		for (let suitIndex = 0; suitIndex < suits.length; suitIndex++) {
@@ -18,7 +23,8 @@ export class Deck {
 	}
 
 	/**
-	 * Deals 2 sets of 26 cards
+	 * Creates two arrays of 26 cards dealt one at a time to each deck
+	 * @returns two arrays of 26 cards
 	 */
 	deal() {
 		let deckOne = []
@@ -33,11 +39,9 @@ export class Deck {
 		return { deckOne, deckTwo }
 	}
 
-	// getRandomCard() {
-	// 	let randomIndex = Math.floor(Math.random() * this.discs.length) // generate random index between 0-51
-	// 	return this.cards[randomIndex]
-	// }
-
+	/**
+	 * shuffles the cards in the deck
+	 */
 	shuffle() {
 		for (let i = this.cards.length - 1; i > 0; i--) {
 			let j = Math.floor(Math.random() * i)
@@ -45,12 +49,5 @@ export class Deck {
 			this.cards[i] = this.cards[j]
 			this.cards[j] = temp
 		}
-	}
-
-	viewCards() {
-		for (let card of this.cards) {
-			card.view()
-		}
-		console.log(this.cards.length)
 	}
 }
