@@ -1,5 +1,5 @@
 import { Card } from './Card.js'
-import { cards, suits } from './cards.js'
+import { cards, suits } from './data/cards.js'
 // const Card = require('./Card.js')
 
 export class Deck {
